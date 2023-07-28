@@ -23,6 +23,9 @@ import com.example.vibration.bluetooth.BtConnection;
 import com.example.vibration.bluetooth.Server;
 import com.example.vibration.service.BtBackgroundService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     public final static String APP_NAME = "BluetoothVibro";
@@ -63,13 +66,16 @@ public class MainActivity extends AppCompatActivity {
 
     private BtConnection connection;
 
+    private Intent serviceIntent;
+
 //    private Server server = new Server();
 
     private final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.BLUETOOTH_CONNECT,
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH,
-            Manifest.permission.FOREGROUND_SERVICE
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.WAKE_LOCK
     };
 
     private SharedPreferences pref;
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bluetooth = BluetoothAdapter.getDefaultAdapter();
+
 
         checkPermissions();
         enableBluetooth();
@@ -99,34 +106,35 @@ public class MainActivity extends AppCompatActivity {
         infoListening = findViewById(R.id.listening_info);
 
         buttonDevices.setOnClickListener((View view) -> {
-            if (bluetooth.isEnabled()) {
-                Intent i = new Intent(MainActivity.this, BtListActivity.class);
-                startActivity(i);
-            } else {
-                Toast.makeText(this, "You should enable bluetooth", Toast.LENGTH_SHORT).show();
-            }
+            if(!checkBluetooth()) return;
+
+            Intent i = new Intent(MainActivity.this, BtListActivity.class);
+            startActivity(i);
+
         });
 
         buttonConnect.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
             connection.connect();
         });
 
         buttonDisconnection.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
+
             Log.i("MY_LOG", "Disconnecting...");
             connection.disconnect();
         });
 
         buttonListen.setOnClickListener(v -> {
-//            if(server.isAlive()){
-//                server.interrupt();
-//            }
-//            server = new Server();
-//            server.start();
-//            new Server(this).start();
+            if(!checkBluetooth()) return;
+
             Toast.makeText(this, "Listening...", Toast.LENGTH_SHORT).show();
-            startService(new Intent(this, BtBackgroundService.class));
-//            buttonListen.
+            Intent serviceIntent = new Intent(this, BtBackgroundService.class);
+            startService(serviceIntent);
+
+
         });
+
 
 
     }
@@ -143,22 +151,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         buttonMess1.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_1);
             disableSenders(2);
         });
         buttonMess2.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_2);
             disableSenders(2);
         });
         buttonMess3.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_3);
             disableSenders(2);
         });
         buttonMess4.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_4);
             disableSenders(2);
         });
         buttonMessN.setOnClickListener(v -> {
+            if(!checkBluetooth()) return;
+
             try{
                 long val = Long.valueOf(numText.getText().toString());
                 if(val>0){
@@ -173,9 +187,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         buttonLong.setOnClickListener(v->{
+            if(!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_LONG);
             disableSenders(2);
         });
+    }
+
+    private boolean checkBluetooth(){
+        if(!bluetooth.isEnabled()){
+            Toast.makeText(this, "You should enable bluetooth", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void enableBluetooth() {

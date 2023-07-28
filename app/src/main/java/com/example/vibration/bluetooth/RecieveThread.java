@@ -3,6 +3,7 @@ package com.example.vibration.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class RecieveThread extends Thread{
 
     private Context context;
 
+
     public RecieveThread(BluetoothSocket socket, Context context){
         this.socket = socket;
         try{
@@ -39,6 +41,11 @@ public class RecieveThread extends Thread{
         }
         this.context = context;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    public RecieveThread(BluetoothSocket socket, Context context, Vibrator vibrator){
+        this(socket,context);
+        this.vibrator = vibrator;
     }
     @Override
     public void run() {
