@@ -1,16 +1,12 @@
 package com.example.vibration.bluetooth;
 
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.vibration.MainActivity;
-import com.example.vibration.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +16,6 @@ public class RecieveThread extends Thread{
     private BluetoothSocket socket;
     private InputStream input;
     private OutputStream outputStream;
-    private byte[] rBuffer;
 
     private Vibrator vibrator;
 

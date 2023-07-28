@@ -5,15 +5,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
 
 import com.example.vibration.MainActivity;
-import com.example.vibration.R;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.UUID;
 
 public class Server extends Thread{

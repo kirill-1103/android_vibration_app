@@ -7,12 +7,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -51,16 +48,9 @@ public class BtBackgroundService extends Service {
         NotificationChannel chan = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             chan.setLightColor(Color.BLUE);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        }
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        assert manager != null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.createNotificationChannel(chan);
         }
 

@@ -1,8 +1,5 @@
 package com.example.vibration;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -18,13 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.example.vibration.adapter.BtConsts;
 import com.example.vibration.bluetooth.BtConnection;
-import com.example.vibration.bluetooth.Server;
 import com.example.vibration.service.BtBackgroundService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         infoListening = findViewById(R.id.listening_info);
 
         buttonDevices.setOnClickListener((View view) -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
 
             Intent i = new Intent(MainActivity.this, BtListActivity.class);
             startActivity(i);
@@ -114,19 +110,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonConnect.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
             connection.connect();
         });
 
         buttonDisconnection.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
 
             Log.i("MY_LOG", "Disconnecting...");
             connection.disconnect();
         });
 
         buttonListen.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
 
             Toast.makeText(this, "Listening...", Toast.LENGTH_SHORT).show();
             Intent serviceIntent = new Intent(this, BtBackgroundService.class);
@@ -134,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
-
 
 
     }
@@ -151,50 +146,50 @@ public class MainActivity extends AppCompatActivity {
 
 
         buttonMess1.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_1);
             disableSenders(2);
         });
         buttonMess2.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_2);
             disableSenders(2);
         });
         buttonMess3.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_3);
             disableSenders(2);
         });
         buttonMess4.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_4);
             disableSenders(2);
         });
         buttonMessN.setOnClickListener(v -> {
-            if(!checkBluetooth()) return;
+            if (!checkBluetooth()) return;
 
-            try{
+            try {
                 long val = Long.valueOf(numText.getText().toString());
-                if(val>0){
-                    if(val > 255){
+                if (val > 0) {
+                    if (val > 255) {
                         val = 255;
                     }
                     connection.sendMessage(val);
                     disableSenders(2);
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
 
             }
         });
-        buttonLong.setOnClickListener(v->{
-            if(!checkBluetooth()) return;
+        buttonLong.setOnClickListener(v -> {
+            if (!checkBluetooth()) return;
             connection.sendMessage(MESSAGE_LONG);
             disableSenders(2);
         });
     }
 
-    private boolean checkBluetooth(){
-        if(!bluetooth.isEnabled()){
+    private boolean checkBluetooth() {
+        if (!bluetooth.isEnabled()) {
             Toast.makeText(this, "You should enable bluetooth", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -210,22 +205,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void disableSenders(int sec){
+    private void disableSenders(int sec) {
         LinearLayout layout = findViewById(R.id.buttons);
         int childCount = layout.getChildCount();
-        for(int i = 0;i<childCount;i++){
+        for (int i = 0; i < childCount; i++) {
             Button b = (Button) layout.getChildAt(i);
             b.setEnabled(false);
         }
-        new Thread(()->{
+        new Thread(() -> {
             try {
-                Thread.sleep(sec* 1000L);
+                Thread.sleep(sec * 1000L);
             } catch (InterruptedException e) {
 
             }
-            for(int i = 0;i<childCount;i++){
+            for (int i = 0; i < childCount; i++) {
                 Button b = (Button) layout.getChildAt(i);
-                b.post(()->{b.setEnabled(true);});
+                b.post(() -> {
+                    b.setEnabled(true);
+                });
             }
         }).start();
     }

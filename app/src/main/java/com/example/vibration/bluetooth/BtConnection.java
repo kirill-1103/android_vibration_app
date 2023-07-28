@@ -13,14 +13,14 @@ import com.example.vibration.R;
 import com.example.vibration.adapter.BtConsts;
 
 public class BtConnection {
-    private Context context;
-    private SharedPreferences pref;
-    private BluetoothAdapter btAdapter;
+    private final Context context;
+    private final SharedPreferences pref;
+    private final BluetoothAdapter btAdapter;
     private BluetoothDevice device;
 
     private ConnectThread connectThread;
 
-    private Activity activity;
+    private final Activity activity;
 
     public BtConnection(Context context, Activity activity) {
         this.context = context;
